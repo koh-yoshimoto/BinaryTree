@@ -1,0 +1,69 @@
+        public bool Remove(int data)
+        {
+            BinaryTreeNode node = Find(data);
+            BinaryTreeNode parent = node.Parent;
+
+            if (node == null) return false;
+
+            BinaryTreeNode maxNode = GetRightMost(node.Left);
+
+            if (maxNode == null)
+            {
+                if (parent == null)
+                {
+                    Root = node.Right;
+                }
+                else if (parent.Left == node)
+                {
+                    parent.Left = node.Right;
+                }
+                else if (parent.Right == node)
+                {
+                    parent.Right = node.Right;
+                }
+
+                if (node.Right != null)
+                {
+                    node.Right.Parent = parent;
+                }
+            }
+            else if (maxNode == node.Left)
+            {
+                if (parent.Left == node)
+                {
+                    parent.Left = maxNode;
+                }
+                else if (parent.Right == node)
+                {
+                    parent.Right = maxNode;
+                }
+                maxNode.Parent = parent;
+            }
+            else
+            {
+                maxNode.Parent.Right = maxNode.Left;
+                if (parent == null)
+                {
+                    Root = maxNode;
+                    maxNode.Parent = null;
+                }
+                else if (parent.Left == node)
+                {
+                    parent.Left = maxNode.Right;
+                    maxNode.Parent = parent;
+                }
+                else if (parent.Right == node)
+                {
+                    parent.Right = node.Right;
+                    maxNode.Parent = parent;
+                }
+                maxNode.Left = node.Left;
+                maxNode.Right = node.Right;
+                node.Left.Parent = maxNode;
+                node.Right.Parent = maxNode;
+            }
+
+            node.Right = null;
+            node.Left = null;
+            return true;
+        }
